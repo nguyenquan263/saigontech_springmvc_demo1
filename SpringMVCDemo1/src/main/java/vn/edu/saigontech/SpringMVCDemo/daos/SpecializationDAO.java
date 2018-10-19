@@ -18,12 +18,15 @@ public class SpecializationDAO {
 	private SessionFactory sessionFactory;
 
 	public List<Specialization> getAllSpecialization() {
+		try {
+			Session session = sessionFactory.getCurrentSession();
 
-		Session session = sessionFactory.getCurrentSession();
+			Query qry = session.createQuery("from Specialization");
 
-		Query qry = session.createQuery("from Specialization");
-
-		return qry.list();
+			return qry.list();
+		} catch (Exception e) {
+			return null;
+		}
 
 	}
 
@@ -32,12 +35,17 @@ public class SpecializationDAO {
 		Specialization target = null;
 		try {
 			target = (Specialization) session.createQuery("from Specialization s where s.ID =" + id).list().get(0);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			target = null;
+		}
 		return target;
 	}
 
 	public boolean addSpecialization(Specialization newSpec) {
 		try {
+			if (newSpec.isValidForAdding() == false)
+				return false;
+
 			Session session = this.sessionFactory.getCurrentSession();
 			session.persist(newSpec);
 			return true;
@@ -48,6 +56,10 @@ public class SpecializationDAO {
 	}
 
 	public boolean deleteSpecialization(int deleteID) {
+
+		if (deleteID < 1)
+			return false;
+
 		Specialization spec = this.getSpecializationByID(deleteID);
 		if (spec != null) {
 			this.sessionFactory.getCurrentSession().delete(spec);
@@ -59,6 +71,9 @@ public class SpecializationDAO {
 
 	public boolean updateSpecialization(Specialization spec) {
 		try {
+			if (spec.isValidForUpdating() == false)
+				return false;
+
 			Session session = this.sessionFactory.getCurrentSession();
 			session.update(spec);
 			return true;

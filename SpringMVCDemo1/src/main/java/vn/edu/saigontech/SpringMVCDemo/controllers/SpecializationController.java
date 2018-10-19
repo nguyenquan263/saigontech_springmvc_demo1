@@ -44,28 +44,39 @@ public class SpecializationController {
 
 	@RequestMapping(value = "/saveSpecialization")
 	public String goSave(HttpServletRequest req) {
-		String specName = req.getParameter("addName");
-		Integer specCredit = Integer.parseInt(req.getParameter("addCredit"));
+		String specName = "";
+		Integer specCredit = -1;
+		try {
+			specName = req.getParameter("addName");
+			specCredit = Integer.parseInt(req.getParameter("addCredit"));
+		} catch (Exception e) {
+			return "redirect:/Specialization?notification=Adding Unuccessfully!";
+		}
 
 		System.out.println(specName + " " + specCredit);
 
 		Specialization newSpec = new Specialization(specName, specCredit);
 
 		boolean res = specializationDAO.addSpecialization(newSpec);
-		
+
 		if (res == true)
 			return "redirect:/Specialization?notification=Adding Successfully!";
-		else return "redirect:/Specialization?notification=Adding Unuccessfully!";
+		else
+			return "redirect:/Specialization?notification=Adding Unuccessfully!";
 
 	}
 
 	@RequestMapping(value = "/deleteSpecialization")
 	public String goDelete(@RequestParam("idDelete") String[] idDelete) {
-
-		for (String id : idDelete) {
+		
+		boolean temp = true;
+		
+		for (String id : idDelete)
+			if (specializationDAO.getSpecializationByID(Integer.parseInt(id)) == null)
+				return "redirect:/Specialization?notification=This specialization has been removed by another user";
+		
+		for (String id : idDelete) 
 			specializationDAO.deleteSpecialization(Integer.parseInt(id));
-		}
-
 		return "redirect:/Specialization?notification=Removing Successfully!";
 	}
 
@@ -80,18 +91,27 @@ public class SpecializationController {
 
 	@RequestMapping(value = "/confirmUpdateSpecialization")
 	public String goConfirmUpdate(HttpServletRequest req) {
-		int updatedID = Integer.parseInt(req.getParameter("updateID"));
-		String updatedName = req.getParameter("updateName");
-		int updatedCredit = Integer.parseInt(req.getParameter("updateCredit"));
+		int updatedID = -1;
+		String updatedName = "";
+		int updatedCredit = -1;
 
+		try {
+			updatedID = Integer.parseInt(req.getParameter("updateID"));
+			updatedName = req.getParameter("updateName");
+			updatedCredit = Integer.parseInt(req.getParameter("updateCredit"));
+
+		} catch (Exception e) {
+			return "redirect:/Specialization?notification=Updating Unuccessfully!";
+		}
+		
 		Specialization targetSpec = new Specialization(updatedID, updatedName, updatedCredit);
 
 		boolean res = specializationDAO.updateSpecialization(targetSpec);
-		
-		
+
 		if (res == true)
 			return "redirect:/Specialization?notification=Updating Successfully!";
-		else return "redirect:/Specialization?notification=Updating Unuccessfully!";
+		else
+			return "redirect:/Specialization?notification=Updating Unuccessfully!";
 
 	}
 }

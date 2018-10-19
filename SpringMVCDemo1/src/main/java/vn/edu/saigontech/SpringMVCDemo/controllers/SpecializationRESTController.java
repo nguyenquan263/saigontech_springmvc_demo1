@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.edu.saigontech.SpringMVCDemo.daos.SpecializationDAO;
-import vn.edu.saigontech.SpringMVCDemo.models.customeResponseEntity;
+import vn.edu.saigontech.SpringMVCDemo.models.customResponseEntity;
 import vn.edu.saigontech.SpringMVCDemo.models.Specialization;
 
 @RestController
@@ -21,37 +21,62 @@ public class SpecializationRESTController {
 	private SpecializationDAO specializationDAO;
 	
 	@RequestMapping(value = "/SpecializationREST", method = RequestMethod.GET)
-	public customeResponseEntity getAllSpec() {
+	public customResponseEntity getAllSpec() {
 		
-		customeResponseEntity rE = new customeResponseEntity(0, "Specializations has been loaded!", specializationDAO.getAllSpecialization());
+		List<Specialization> res = specializationDAO.getAllSpecialization();
+		customResponseEntity rE;
+		if (res == null)
+			rE = new customResponseEntity(1, "Specializations has not been loaded!", null);
+		else 
+			rE = new customResponseEntity(0, "Specializations has been loaded!", specializationDAO.getAllSpecialization());
 		
 		return rE;
 	}
 	
 	@RequestMapping(value = "/SpecializationREST/{id}", method = RequestMethod.GET)
-	public customeResponseEntity getSpecByID(@PathVariable("id") int id) {
-		customeResponseEntity rE = new customeResponseEntity(0, "This specialization has been loaded!", specializationDAO.getSpecializationByID(id));
+	public customResponseEntity getSpecByID(@PathVariable("id") int id) {
+		
+		Specialization res = specializationDAO.getSpecializationByID(id);
+		customResponseEntity rE;
+		if (res == null)
+			rE = new customResponseEntity(1, "This specialization has not been loaded!", null);
+		else 
+			rE = new customResponseEntity(0, "This specialization has been loaded!", specializationDAO.getSpecializationByID(id));
 		
 		return rE;
 	}
 	
 	@RequestMapping(value = "/SpecializationREST", method = RequestMethod.POST)
-	public customeResponseEntity addSpec(@RequestBody Specialization spec) {
+	public customResponseEntity addSpec(@RequestBody Specialization spec) {
 		
-		customeResponseEntity rE = new customeResponseEntity(0, "Add this specialization successfully", specializationDAO.addSpecialization(spec));
-		
+		boolean res = specializationDAO.addSpecialization(spec);
+		customResponseEntity rE;
+		if (res == true)
+			rE = new customResponseEntity(0, "Add this specialization successfully", true);
+		else 
+			rE = new customResponseEntity(1, "Add this specialization unsuccessfully", false);
 		return rE;
 	}
 	
 	@RequestMapping(value = "/SpecializationREST", method = RequestMethod.PUT)
-	public customeResponseEntity updateSpec(@RequestBody Specialization spec) {
-		customeResponseEntity rE = new customeResponseEntity(0, "Update this specialization successfully", specializationDAO.updateSpecialization(spec));
+	public customResponseEntity updateSpec(@RequestBody Specialization spec) {
+		boolean res = specializationDAO.updateSpecialization(spec);
+		customResponseEntity rE;
+		if (res == true)
+			rE = new customResponseEntity(0, "Update this specialization successfully", true);
+		else 
+			rE = new customResponseEntity(1, "Update this specialization unsuccessfully", false);
 		return rE;
 	}
 	
 	@RequestMapping(value = "/SpecializationREST/{id}", method = RequestMethod.DELETE)
-	public customeResponseEntity deleteSpec(@PathVariable("id") int id) {
-		customeResponseEntity rE = new customeResponseEntity(0, "Delete this specialization successfully", specializationDAO.deleteSpecialization(id));
+	public customResponseEntity deleteSpec(@PathVariable("id") int id) {
+		boolean res = specializationDAO.deleteSpecialization(id);
+		customResponseEntity rE;
+		if (res == true)
+			rE = new customResponseEntity(0, "Delete this specialization successfully", true);
+		else 
+			rE = new customResponseEntity(1, "Delete this specialization unsuccessfully", false);
 		return rE;
 	}
 	
