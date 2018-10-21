@@ -1,5 +1,4 @@
 package vn.edu.saigontech.SpringMVCDemo.controllers;
-
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import com.mysql.jdbc.UpdatableResultSet;
 
 import vn.edu.saigontech.SpringMVCDemo.daos.SpecializationDAO;
 import vn.edu.saigontech.SpringMVCDemo.models.Specialization;
+import vn.edu.saigontech.SpringMVCDemo.models.customResponseEntity;
 
 @Controller
 @Transactional
@@ -28,7 +28,7 @@ public class SpecializationController {
 
 	@RequestMapping(value = "/Specialization")
 	public ModelAndView getAllAdmin() {
-		List<Specialization> specList = specializationDAO.getAllSpecialization();
+		List<Specialization> specList = (List<Specialization>) specializationDAO.getAllSpecialization().getData();
 		ModelAndView result = new ModelAndView("SpecializationList");
 
 		result.addObject("listSpecialization", specList);
@@ -57,12 +57,10 @@ public class SpecializationController {
 
 		Specialization newSpec = new Specialization(specName, specCredit);
 
-		boolean res = specializationDAO.addSpecialization(newSpec);
+		customResponseEntity customResponse = specializationDAO.addSpecialization(newSpec);
 
-		if (res == true)
-			return "redirect:/Specialization?notification=Adding Successfully!";
-		else
-			return "redirect:/Specialization?notification=Adding Unuccessfully!";
+		return "redirect:/Specialization?notification="+customResponse.getMessage();
+		
 
 	}
 
@@ -72,7 +70,7 @@ public class SpecializationController {
 		boolean temp = true;
 		
 		for (String id : idDelete)
-			if (specializationDAO.getSpecializationByID(Integer.parseInt(id)) == null)
+			if (specializationDAO.getSpecializationByID(Integer.parseInt(id)).getData() == null)
 				return "redirect:/Specialization?notification=This specialization has been removed by another user";
 		
 		for (String id : idDelete) 
@@ -106,12 +104,9 @@ public class SpecializationController {
 		
 		Specialization targetSpec = new Specialization(updatedID, updatedName, updatedCredit);
 
-		boolean res = specializationDAO.updateSpecialization(targetSpec);
+		customResponseEntity customResponse = specializationDAO.updateSpecialization(targetSpec);
 
-		if (res == true)
-			return "redirect:/Specialization?notification=Updating Successfully!";
-		else
-			return "redirect:/Specialization?notification=Updating Unuccessfully!";
+		return "redirect:/Specialization?notification="+customResponse.getMessage();
 
 	}
 }

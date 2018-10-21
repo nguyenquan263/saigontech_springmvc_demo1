@@ -19,15 +19,15 @@ td>input {
 </head>
 <body>
 	<form action="confirmUpdateSpecialization" method="POST">
-		<input type="hidden" name="updateID" value="${targetSpec.ID}" />
+		<input type="hidden" name="updateID" value="${targetSpec.data.ID}" />
 		<table border="1" style="width: 50%">
 			<tr>
 				<th align="left" width="30%">Name:</th>
-				<td align="left" width="70%"><input  type="text" name="updateName" value="${targetSpec.name}"/></td>
+				<td align="left" width="70%"><input  type="text" name="updateName" value="${targetSpec.data.name}"/></td>
 			</tr>
 			<tr>
 				<th align="left" width="30%">Number of credit:</th>
-				<td align="left" width="70%"><input type="text" name="updateCredit" value="${targetSpec.numberCredit}"></td>
+				<td align="left" width="70%"><input type="text" name="updateCredit" value="${targetSpec.data.numberCredit}"></td>
 			</tr>
 		</table>
 		<br /> <input style="height: 50px" type="submit" value="Update specialization" />

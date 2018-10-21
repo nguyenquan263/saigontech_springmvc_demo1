@@ -1,7 +1,5 @@
 package vn.edu.saigontech.SpringMVCDemo.models;
 
-
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +12,7 @@ import javax.persistence.Transient;
 @Table(name = "specializations")
 public class Specialization {
 
-	private  Integer ID;
+	private Integer ID;
 	private String Name;
 	private Integer numberCredit;
 
@@ -46,7 +44,7 @@ public class Specialization {
 		ID = iD;
 	}
 
-	@Column(name = "Name", nullable = false)
+	@Column(name = "Name", unique = true, nullable = false)
 	public String getName() {
 		return Name;
 	}
@@ -67,29 +65,6 @@ public class Specialization {
 	@Override
 	public String toString() {
 		return "Specialization [ID=" + ID + ", Name=" + Name + ", numberCredit=" + numberCredit + "]";
-	}
-	@Transient
-	public boolean isValidForAdding() {
-		boolean result = true;
-
-		if (this.Name == "" || this.Name == null)
-			result = false;
-		if (this.numberCredit == null || this.numberCredit < 1)
-			result = false;
-
-		return result;
-	}
-	@Transient
-	public boolean isValidForUpdating() {
-		boolean result = true;
-		if (this.ID == null || this.ID < 1)
-			result = false;
-		if (this.Name == "" || this.Name == null)
-			result = false;
-		if (this.numberCredit == null || this.numberCredit < 1)
-			result = false;
-
-		return result;
 	}
 
 }

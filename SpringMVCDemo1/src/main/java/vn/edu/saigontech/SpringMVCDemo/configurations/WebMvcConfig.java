@@ -1,6 +1,10 @@
 package vn.edu.saigontech.SpringMVCDemo.configurations;
 
+import java.net.ConnectException;
+
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -26,5 +30,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 
+	
 
 }
